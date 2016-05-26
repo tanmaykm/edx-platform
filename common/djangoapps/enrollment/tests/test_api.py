@@ -230,3 +230,63 @@ class EnrollmentTest(CacheIsolationTestCase):
         # The data matches
         self.assertEqual(len(details['course_modes']), 3)
         self.assertEqual(details, cached_details)
+
+    def test_update_enrollment_expired_mode_with_error(self):
+        # Add fake course enrollment information to the fake data API
+        fake_data_api.add_course(self.COURSE_ID, course_modes=['honor', 'verified', 'audit'])
+        # Enroll in the course and verify the URL we get sent to
+        result = api.add_enrollment(self.USERNAME, self.COURSE_ID, mode='audit')
+        get_result = api.get_enrollment(self.USERNAME, self.COURSE_ID)
+        self.assertEquals(result, get_result)
+
+        result = api.update_enrollment(self.USERNAME, self.COURSE_ID, mode='honor')
+        self.assertEquals('honor', result['mode'])
+
+        # set the verified mode as expired
+        fake_data_api.set_expired_mode()
+        # On updating enrollment mode to verified it should the raise the error.
+        with self.assertRaises(CourseModeNotFoundError):
+            api.update_enrollment(self.USERNAME, self.COURSE_ID, mode='verified', include_expired=False)
+
+    def test_update_enrollment_expired_mode(self):
+        # Add fake course enrollment information to the fake data API
+        fake_data_api.add_course(self.COURSE_ID, course_modes=['honor', 'verified', 'audit'])
+        # Enroll in the course and verify the URL we get sent to
+        result = api.add_enrollment(self.USERNAME, self.COURSE_ID, mode='audit')
+        get_result = api.get_enrollment(self.USERNAME, self.COURSE_ID)
+        self.assertEquals(result, get_result)
+
+        result = api.update_enrollment(self.USERNAME, self.COURSE_ID, mode='honor')
+        self.assertEquals('honor', result['mode'])
+
+        # set the verified mode as expired
+        fake_data_api.set_expired_mode()
+
+        # enrollment in verified mode will work fine with include_expired=True
+        result = api.update_enrollment(self.USERNAME, self.COURSE_ID, mode='verified', include_expired=True)
+        self.assertEquals('verified', result['mode'])
+
+    @ddt.data(True, False)
+    def test_unenroll_with_expired_mode(self, include_expired):
+        # Add a fake course enrollment information to the fake data API
+        course_modes = ['honor', 'verified', 'audit']
+        fake_data_api.add_course(self.COURSE_ID, course_modes=course_modes)
+        # Enroll in the course and verify the URL we get sent to
+        result = api.add_enrollment(self.USERNAME, self.COURSE_ID, mode='verified')
+        self.assertIsNotNone(result)
+        self.assertEquals(result['student'], self.USERNAME)
+        self.assertEquals(result['course']['course_id'], self.COURSE_ID)
+        self.assertEquals(result['mode'], 'verified')
+        self.assertTrue(result['is_active'])
+
+        # set the verified mode as expired
+        fake_data_api.set_expired_mode()
+
+        result = api.update_enrollment(
+            self.USERNAME, self.COURSE_ID, mode='verified', is_active=False, include_expired=include_expired
+        )
+        self.assertIsNotNone(result)
+        self.assertEquals(result['student'], self.USERNAME)
+        self.assertEquals(result['course']['course_id'], self.COURSE_ID)
+        self.assertEquals(result['mode'], 'verified')
+        self.assertFalse(result['is_active'])
