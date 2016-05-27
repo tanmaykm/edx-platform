@@ -1,14 +1,14 @@
 define([
         'backbone',
         'jquery',
-        'js/learner_dashboard/views/course_card_view'
-    ], function (Backbone, $, CourseCardView) {
+        'js/learner_dashboard/views/course_card_actions'
+    ], function (Backbone, $, CourseCardActions) {
         
         'use strict';
         
-        describe('Course Card View', function () {
+        describe('Course Card Actions', function () {
             var view = null,
-                courseCardModel,
+                courseCardActionModel,
                 setupView,
                 context = {      
                     certificate_url: '',
@@ -36,11 +36,12 @@ define([
 
             setupView = function(enrollment_status){
                 context.enrollment_status = enrollment_status;
-                setFixtures('<div class="course-card card"></div>');
+                setFixtures('<div class="course-actions"></div>');
                 courseCardModel = new Backbone.Model(context);
-                view = new CourseCardView({
+                view = new CourseCardActions({
                     model: courseCardModel
                 });
+                $el.html(view.el);
             };
 
             beforeEach(function() {
@@ -55,23 +56,18 @@ define([
                 expect(view).toBeDefined();
             });
 
-            it('should render the course card based on the data enrolled', function() {
+            it('should render the course card actions based on the data enrolled', function() {
                 view.remove();
                 setupView('enrolled');
-                expect(view.$('.header-img').attr('src')).toEqual(context.image_url);
-                expect(view.$('.course-details .course-title-link').text().trim()).toEqual(context.display_name);
-                expect(view.$('.course-details .course-title-link').attr('href')).toEqual(context.marketing_url);
-                expect(view.$('.course-details .course-text .course-key').html()).toEqual(context.key);
-                expect(view.$('.course-details .course-text .run-period').html())
-                    .toEqual(context.course_start + ' - ' + context.course_end);
+                expect(view.$('.enrollment-info').html()).toEqual('ENROLLED');
+                expect(view.$('.view-course-link').attr('src')).toEqual(context.courseware_url);
+                expect(view.$('.view-course-link').text().toEqual('View Course');
             });
 
-            it('should render the course card based on the data not enrolled', function() {
-                expect(view.$('.header-img').attr('src')).toEqual(context.image_url);
-                expect(view.$('.course-details .course-title-link').text().trim()).toEqual(context.display_name);
-                expect(view.$('.course-details .course-title-link').attr('href')).toEqual(context.marketing_url);
-                expect(view.$('.course-details .course-text .course-key').html()).toEqual(context.key);
-                expect(view.$('.course-details .course-text .run-period').html()).not.toBeDefined();
+            it('should render the course card actions based on the data not enrolled', function() {
+                expect(view.$('.enrollment-info').html()).toEqual('NOT ENROLLED');
+                expect(view.$('.view-course-link').attr('src')).toEqual(context.marketing_url);
+                expect(view.$('.view-course-link').text().toEqual('Enroll Now');
             });
         });
     }
