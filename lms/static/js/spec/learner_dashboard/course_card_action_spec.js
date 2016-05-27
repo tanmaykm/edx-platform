@@ -1,8 +1,9 @@
 define([
         'backbone',
         'jquery',
+        'js/learner_dashboard/views/course_card_model',
         'js/learner_dashboard/views/course_card_actions'
-    ], function (Backbone, $, CourseCardActions) {
+    ], function (Backbone, $, CourseCardModel, CourseCardActions) {
         
         'use strict';
         
@@ -11,15 +12,8 @@ define([
                 courseCardActionModel,
                 setupView,
                 context = {      
-                    certificate_url: '',
-                    course_end: 'Jun 13, 2016',
                     course_modes: [],
-                    course_key: 'course-v1:ANUx+ANU-ASTRO1x+3T2015',
-                    courseware_url: 'http://localhost:8000/courses/course-v1:edX+DemoX+Demo_Course/info',
-                    course_start: 'Apr 25, 2016',
-                    course_started: true,
                     display_name: 'Astrophysics: Exploring Exoplanets',
-                    image_url: 'https://testimage.com/image',
                     key: 'ANU-ASTRO1x',
                     marketing_url: 'https://www.edx.org/course/astrophysics-exploring-exoplanets-anux-anu-astro2x-1',
                     organization: {
@@ -27,17 +21,23 @@ define([
                         key: 'ANUx'
                     },
                     run_modes: [{
-                        course_key: '12313',
+                        course_start: 'Apr 25, 2016',
+                        course_end: 'Jun 13, 2016',
+                        course_key: 'course-v1:ANUx+ANU-ASTRO1x+3T2015',
+                        courseware_url: 'http://localhost:8000/courses/course-v1:edX+DemoX+Demo_Course/info',
+                        image_url: 'https://www.edx.org/sites/default/files/styles/course_video_banner/public/course/image/featured-card/italian1x-video_still_318x210.jpg?itok=l_bMTvC9',
                         mode_slug: 'verified',
                         run_key: '2T2016',
-                        start_date: ''
+                        course_started: true,
+                        enrollment_status: 'enrolled',
+                        certificate_url: '',
                     }]
                 };
 
             setupView = function(enrollment_status){
                 context.enrollment_status = enrollment_status;
                 setFixtures('<div class="course-actions"></div>');
-                courseCardModel = new Backbone.Model(context);
+                courseCardModel = new CourseCardModel(context);
                 view = new CourseCardActions({
                     model: courseCardModel
                 });

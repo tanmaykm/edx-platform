@@ -34,16 +34,8 @@ ProgramDetailsFactory({programData:
         program_details_url: 'https://localhost:8000/program_details.html',
         course_codes: [
             {      
-                certificate_url: '',
-                course_end: 'Jun 13, 2016',
                 course_modes: [],
-                course_key: 'course-v1:ANUx+ANU-ASTRO1x+3T2015',
-                courseware_url: 'http://localhost:8000/courses/course-v1:edX+DemoX+Demo_Course/info',
-                course_start: 'Apr 25, 2016',
-                course_started: true,
                 display_name: 'Astrophysics: Exploring Exoplanets',
-                enrollment_status: 'enrolled',
-                image_url: 'https://www.edx.org/sites/default/files/styles/course_video_banner/public/course/image/featured-card/italian1x-video_still_318x210.jpg?itok=l_bMTvC9',
                 key: 'ANU-ASTRO1x',
                 marketing_url: 'https://www.edx.org/course/astrophysics-exploring-exoplanets-anux-anu-astro2x-1',
                 organization: {
@@ -51,23 +43,21 @@ ProgramDetailsFactory({programData:
                     key: 'ANUx'
                 },
                 run_modes: [{
-                    course_key: '12313',
+                    course_start: 'Apr 25, 2016',
+                    course_end: 'Jun 13, 2016',
+                    course_key: 'course-v1:ANUx+ANU-ASTRO1x+3T2015',
+                    courseware_url: 'http://localhost:8000/courses/course-v1:edX+DemoX+Demo_Course/info',
+                    image_url: 'https://www.edx.org/sites/default/files/styles/course_video_banner/public/course/image/featured-card/italian1x-video_still_318x210.jpg?itok=l_bMTvC9',
                     mode_slug: 'verified',
                     run_key: '2T2016',
-                    start_date: ''
+                    course_started: true,
+                    enrollment_status: 'enrolled',
+                    certificate_url: '',
                 }]
             },
             {      
-                certificate_url: '',
-                course_end: 'Apr 11, 2017',
                 course_modes: [],
-                course_key: 'course-v1:ANUx+ALONEx+3T2015',
-                courseware_url: null,
-                course_start: 'Apr 15, 2016',
-                course_started: true,
                 display_name: 'Cosmology: Are We Alone',
-                enrollment_status: null,
-                image_url: 'https://prod-edx-mktg-edit.edx.org/sites/default/files/styles/course_video_banner/public/course/image/featured-card/analyzing_and_visualizing_data_with_excel_318x210.jpg?itok=zkKbrFi5',
                 key: 'ANU-ALONEx',
                 marketing_url: 'https://www.edx.org/course/Are-We-Alone-ANU-Alonex-1',
                 organization: {
@@ -75,10 +65,16 @@ ProgramDetailsFactory({programData:
                     key: 'ANUx'
                 },
                 run_modes: [{
-                    course_key: '14523',
+                    course_start: 'Apr 15, 2016',
+                    course_end: 'Apr 11, 2017',
+                    course_started: true,
+                    course_key: 'course-v1:ANUx+ALONEx+3T2015',
+                    courseware_url: null,
+                    image_url: 'https://prod-edx-mktg-edit.edx.org/sites/default/files/styles/course_video_banner/public/course/image/featured-card/analyzing_and_visualizing_data_with_excel_318x210.jpg?itok=zkKbrFi5',
                     mode_slug: 'verified',
                     run_key: '3T2016',
-                    start_date: ''
+                    enrollment_status: null,
+                    certificate_url: '',
                 }]
             }
         ]
