@@ -247,26 +247,53 @@ class CourseTopicsViewTest(DiscussionAPIViewTestMixin, ModuleStoreTestCase):
         self.assert_response_correct(
             response,
             404,
-            {"developer_message": "Discussion not found."}
+            {"developer_message": "Discussion not found for 'invalid_topic_id'."}
         )
 
-    def test_discussion_topic(self):
+    def test_topic_id(self):
         """
         Tests discussion topic details against a requested topic id
         """
-        topic_id = "courseware-topic-id"
-        self.make_discussion_module(topic_id, "test_category", "test_target")
-        url = "{}?topic_id=courseware-topic-id".format(self.url)
+        topic_id_1 = "topic_id_1"
+        topic_id_2 = "topic_id_2"
+        self.make_discussion_module(topic_id_1, "test_category_1", "test_target_1")
+        self.make_discussion_module(topic_id_2, "test_category_2", "test_target_2")
+        url = "{}?topic_id=topic_id_1,topic_id_2".format(self.url)
         response = self.client.get(url)
         self.assert_response_correct(
             response,
             200,
             {
-                "children": [],
-                "id": topic_id,
-                "thread_list_url": "http://testserver/api/discussion/v1/threads/?course_id=x%2Fy%2Fz"
-                                   "&topic_id=courseware-topic-id",
-                "name": "test_target"
+                "non_courseware_topics": [],
+                "courseware_topics": [
+                    {
+                        "children": [{
+                            "children": [],
+                            "id": "topic_id_1",
+                            "thread_list_url": "http://testserver/api/discussion/v1/threads/?"
+                                               "course_id=x%2Fy%2Fz&topic_id=topic_id_1",
+                            "name": "test_target_1"
+                        }],
+                        "id": None,
+                        "thread_list_url": "http://testserver/api/discussion/v1/threads/?"
+                                           "course_id=x%2Fy%2Fz&topic_id=topic_id_1",
+                        "name": "test_category_1"
+                    },
+                    {
+                        "children":
+                            [{
+                                "children": [],
+                                "id": "topic_id_2",
+                                "thread_list_url": "http://testserver/api/discussion/v1/threads/?"
+                                                   "course_id=x%2Fy%2Fz&topic_id=topic_id_2",
+                                "name": "test_target_2"
+                            }],
+                        "id": None,
+                        "thread_list_url": "http://testserver/api/discussion/v1/threads/?"
+                                           "course_id=x%2Fy%2Fz&topic_id=topic_id_2",
+                        "name": "test_category_2"
+                    }
+                ]
             }
         )
 

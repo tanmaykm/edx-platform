@@ -14,7 +14,6 @@ import pystache_custom as pystache
 from opaque_keys.edx.locations import i4xEncoder
 from opaque_keys.edx.keys import CourseKey
 from xmodule.modulestore.django import modulestore
-from openedx.core.lib.exceptions import DiscussionNotFoundError
 from lms.djangoapps.ccx.overrides import get_current_ccx
 
 from django_comment_common.models import Role, FORUM_ROLE_STUDENT
@@ -136,33 +135,6 @@ def get_accessible_discussion_modules(course, user, include_all=False):  # pylin
         module for module in all_modules
         if has_required_keys(module) and (include_all or has_access(user, 'load', module, course.id))
     ]
-
-
-def get_discussion_module(course, user, discussion_id):
-    """
-    Return discussion module in the course against a discussion id.
-
-    Parameters:
-        course_key: The course object.
-        user: The user requested the object.
-
-    Returns:
-        The discussion module information in the specified course for the given
-        discussion id only if user had access to that discussion module.
-
-    Raises:
-        DiscussionNotFoundError: if  discussion module does not exist for
-        given ID or requesting user does not have access to requested
-        discussion module.
-    """
-    key = get_cached_discussion_key(course, discussion_id)
-    if key:
-        discussion_module = modulestore().get_item(key)
-        if not discussion_category_id_access(course, user, discussion_id, discussion_module):
-            raise DiscussionNotFoundError("Discussion not found.")
-        return discussion_module
-    else:
-        raise DiscussionNotFoundError("Discussion not found.")
 
 
 def get_discussion_id_map_entry(module):
