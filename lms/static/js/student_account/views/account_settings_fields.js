@@ -11,7 +11,8 @@
         'text!templates/fields/field_link_account.underscore',
         'text!templates/fields/field_dropdown_account.underscore',
         'text!templates/fields/field_social_link_account.underscore',
-        'text!templates/fields/field_order_history.underscore'
+        'text!templates/fields/field_order_history.underscore',
+        'edx-ui-toolkit/js/utils/html-utils',
     ], function (
         gettext, $, _, Backbone,
         FieldViews,
@@ -20,7 +21,9 @@
         field_link_account_template,
         field_dropdown_account_template,
         field_social_link_template,
-        field_order_history_template)
+        field_order_history_template,
+        HtmlUtils
+    )
     {
 
         var AccountSettingsFieldViews = {
@@ -233,19 +236,15 @@
             OrderHistoryFieldView: FieldViews.ReadonlyFieldView.extend({
                 fieldType: 'orderHistory',
                 fieldTemplate: field_order_history_template,
-                events: {
-                    'mouseenter .u-field-order': 'showDetailsButton',
-                    'mouseleave .u-field-order': 'hideDetailsButton'
-                },
 
                 initialize: function (options) {
                     this.options = options;
                     this._super(options);
-                    _.bindAll(this, 'showDetailsButton', 'hideDetailsButton');
+                    this.template = HtmlUtils.template(this.fieldTemplate);
                 },
 
                 render: function () {
-                    this.$el.html(this.template({
+                    HtmlUtils.setHtml(this.$el, this.template({
                         title: this.options.title,
                         totalPrice: this.options.totalPrice,
                         orderId: this.options.orderId,
@@ -255,14 +254,6 @@
                     }));
                     this.delegateEvents();
                     return this;
-                },
-
-                showDetailsButton: function () {
-                    this.$el.find('.u-field-order-link .u-field-link').removeClass('hidden');
-                },
-
-                hideDetailsButton: function () {
-                    this.$el.find('.u-field-order-link .u-field-link').addClass('hidden');
                 }
             })
         };

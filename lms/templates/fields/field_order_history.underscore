@@ -5,7 +5,7 @@
     <span class="u-field-order-value u-field-order-number"><%- orderId %></span>
     <span class="u-field-order-link">
         <% if (receiptUrl) { %>
-            <a class="u-field-link hidden" aria-live="polite" target="_blank" href="<%- receiptUrl %>"><%- gettext('Order Details') %></a>
+            <a class="u-field-link" aria-live="polite" target="_blank" href="<%- receiptUrl %>"><%- gettext('Order Details') %></a>
         <% } %>
     </span>
 </div>

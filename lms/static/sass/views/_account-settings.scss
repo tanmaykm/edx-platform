@@ -321,12 +321,20 @@
                 margin-bottom: $baseline;
                 padding: 0;
 
+                .u-field-order-link {
+                    opacity: 0;
+                }
+
                 &:last-child {
                     border-bottom: 1px solid $m-gray-l4;
                 }
 
                 &:hover {
                     background-color: $light-gray4;
+
+                    .u-field-order-link {
+                        opacity: 100;
+                    }
                 }
             }
 
