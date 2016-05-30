@@ -15,7 +15,7 @@ from django.utils.six.moves.urllib.parse import (  # pylint: disable=no-name-in-
 from pipeline.storage import PipelineMixin
 
 from openedx.core.djangoapps.theming.helpers import (
-    get_base_theme_dir,
+    get_theme_base_dir,
     get_project_root_name,
     get_current_site_theme_dir,
     get_themes,
@@ -83,9 +83,12 @@ class ThemeStorage(StaticFilesStorage):
         Returns:
             True if given asset override is provided by the given theme otherwise returns False
         """
+        if not is_comprehensive_theming_enabled():
+            return False
+
         # in debug mode check static asset from within the project directory
         if settings.DEBUG:
-            themes_location = get_base_theme_dir() if is_comprehensive_theming_enabled() else None
+            themes_location = get_theme_base_dir(theme, suppress_error=True)
             # Nothing can be themed if we don't have a theme location or required params.
             if not all((themes_location, theme, name)):
                 return False

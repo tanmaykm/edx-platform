@@ -25,7 +25,7 @@ class TestHelpers(TestCase):
         actual_themes = get_themes()
         self.assertItemsEqual(expected_themes, actual_themes)
 
-    @override_settings(COMPREHENSIVE_THEME_DIR=settings.TEST_THEME.dirname())
+    @override_settings(COMPREHENSIVE_THEME_DIRS=[settings.TEST_THEME.dirname()])
     def test_get_themes_2(self):
         """
         Tests template paths are returned from enabled theme.

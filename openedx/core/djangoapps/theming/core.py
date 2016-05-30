@@ -9,6 +9,8 @@ from .helpers import (
     get_project_root_name,
 )
 
+from .helpers import get_themes
+
 
 def enable_comprehensive_theming(themes_dir):
     """
@@ -28,5 +30,15 @@ def enable_comprehensive_theming(themes_dir):
             settings.STATICFILES_DIRS = settings.STATICFILES_DIRS + [staticfiles_dir]
 
         locale_dir = os.path.join(themes_dir, theme_dir, get_project_root_name(), "conf", "locale")
+        if locale_dir.isdir():
+            settings.LOCALE_PATHS = (locale_dir, ) + settings.LOCALE_PATHS
+
+
+def enable_theming():
+    """
+    Add directories and relevant paths to settings for comprehensive theming.
+    """
+    for theme in get_themes():
+        locale_dir = theme.path / "conf" / "locale"
         if locale_dir.isdir():
             settings.LOCALE_PATHS = (locale_dir, ) + settings.LOCALE_PATHS

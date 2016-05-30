@@ -53,7 +53,7 @@ class TestComprehensiveTheming(TestCase):
         with open(template_dir / "footer.html", "w") as footer:
             footer.write("<footer>TEMPORARY THEME</footer>")
 
-        dest_path = path(settings.COMPREHENSIVE_THEME_DIR) / tmp_theme
+        dest_path = path(settings.COMPREHENSIVE_THEME_DIRS) / tmp_theme
         create_symlink(themes_dir / tmp_theme, dest_path)
 
         @with_comprehensive_theme(tmp_theme)
@@ -146,7 +146,7 @@ def compile_sass(system):
         'pavelib.assets.update_assets',
         args=(
             system,
-            "--themes_dir={themes_dir}".format(themes_dir=settings.COMPREHENSIVE_THEME_DIR),
+            "--themes_dir={themes_dir}".format(themes_dir=settings.COMPREHENSIVE_THEME_DIRS),
             "--themes=red-theme",
             "--settings=test"),
     )
