@@ -6,7 +6,9 @@
                 constructor: function (models, options) {
                     this.options = options;
                     this.url = options.url;
-                    this.state.perPage = options.per_page;
+                    if (options.perPage) {
+                        this.state.pageSize = options.perPage;
+                    }
 
                     this.course_id = options.course_id;
                     this.teamEvents = options.teamEvents;
