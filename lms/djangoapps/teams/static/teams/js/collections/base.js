@@ -35,6 +35,8 @@
                     this.isStale = true;
                 },
 
+                /* TODO: These changes has been added to backbone.paginator
+                remove when backbone.paginator gets a new release */
                 sync: function (method, model, options) {
                     // do not send total pages and total records in request
                     if (method === 'read') {
