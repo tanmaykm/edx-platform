@@ -111,7 +111,7 @@ class ThreadViewSet(DeveloperErrorViewMixin, ViewSet):
 
         GET /api/discussion/v1/threads/?course_id=ExampleX/Demo/2015
 
-        GET /api/discussion/v1/threads/thread_id
+        GET /api/discussion/v1/threads/{thread_id}
 
         POST /api/discussion/v1/threads
         {
@@ -165,10 +165,10 @@ class ThreadViewSet(DeveloperErrorViewMixin, ViewSet):
 
     **GET Thread Parameters**:
 
-        * thread_id: The id of the thread
+        * thread_id (required): The id of the thread
 
-        * requested_fields: (list) Indicates which additional fields to return
-          for each thread. (supports 'profile_image')
+        * requested_fields (optional parameter): (list) Indicates which additional
+         fields to return for each thread. (supports 'profile_image')
 
     **POST Parameters**:
 

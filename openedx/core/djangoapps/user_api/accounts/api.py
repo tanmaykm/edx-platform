@@ -41,7 +41,7 @@ visible_fields = _visible_fields
 
 
 @intercept_errors(UserAPIInternalError, ignore_errors=[UserAPIRequestError])
-def get_account_settings(request, username=None, configuration=None, view=None):
+def get_account_settings(request, usernames=None, configuration=None, view=None):
     """Returns account information for a user serialized as JSON.
 
     Note:
@@ -52,7 +52,7 @@ def get_account_settings(request, username=None, configuration=None, view=None):
         request (Request): The request object with account information about the requesting user.
             Only the user with username `username` or users with "is_staff" privileges can get full
             account information. Other users will get the account fields that the user has elected to share.
-        username (str): Optional string of comma separated usernames for the desired account information. If not
+        usernames (list): Optional list of usernames for the desired account information. If not
             specified, `request.user.username` is assumed.
         configuration (dict): an optional configuration specifying which fields in the account
             can be shared, and the default visibility settings. If not present, the setting value with
@@ -62,7 +62,7 @@ def get_account_settings(request, username=None, configuration=None, view=None):
             "shared", only shared account information will be returned, regardless of `request.user`.
 
     Returns:
-         A dict containing account fields if only one user is requested else returns a list of dict
+         A list of users account details.
 
     Raises:
          UserNotFound: no user with username `username` exists (or `request.user.username` if
@@ -70,13 +70,10 @@ def get_account_settings(request, username=None, configuration=None, view=None):
          UserAPIInternalError: the operation failed due to an unexpected error.
     """
     requesting_user = request.user
+    if not usernames:
+        usernames = [requesting_user.username]
 
-    if username is None:
-        requested_usernames = [requesting_user.username]
-    else:
-        requested_usernames = username[:-1].split(',') if username[-1:] == ',' else username.split(',')
-
-    requested_users = User.objects.select_related('profile').filter(username__in=requested_usernames)
+    requested_users = User.objects.select_related('profile').filter(username__in=usernames)
     if not requested_users:
         raise UserNotFound()
 
@@ -94,10 +91,7 @@ def get_account_settings(request, username=None, configuration=None, view=None):
             context={'request': request}
         ).data)
 
-    # return type is list only when multiple user profiles are requested;
-    # else return single profile object to make it backward compatible for
-    # exiting clients of this API method
-    return serialized_users if len(requested_usernames) > 1 else serialized_users[0]
+    return serialized_users
 
 
 @intercept_errors(UserAPIInternalError, ignore_errors=[UserAPIRequestError])

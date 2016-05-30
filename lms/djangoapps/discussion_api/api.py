@@ -51,12 +51,12 @@ from openedx.core.djangoapps.course_groups.cohorts import get_cohort_id
 from openedx.core.lib.exceptions import CourseNotFoundError, PageNotFoundError
 
 
-class DISCUSSIONENTITY(Enum):
+class DiscussionEntity(Enum):
     """
     Enum for different types of discussion related entities
     """
-    THREAD = 'thread'
-    COMMENT = 'comment'
+    thread = 'thread'
+    comment = 'comment'
 
 
 def _get_course(course_key, user):
@@ -268,20 +268,11 @@ def _get_user_profile_dict(request, usernames):
 
         A dict with username as key and user profile details as value.
     """
-    username_profile_dict = {}
-    try:
-        request.GET = request.GET.copy()
-        request.GET['usernames'] = usernames
-        user_profile_details = AccountViewSet.as_view({'get': 'list'})(request).data
-    except Exception as ex:
-        raise ex
+    request.GET = request.GET.copy()
+    request.GET['username'] = usernames
+    user_profile_details = AccountViewSet.as_view({'get': 'list'})(request).data
 
-    if isinstance(user_profile_details, list):
-        for user in user_profile_details:
-            username_profile_dict[user['username']] = user
-    else:
-        username_profile_dict[user_profile_details['username']] = user_profile_details
-    return username_profile_dict
+    return {user['username']: user for user in user_profile_details}
 
 
 def _user_profile(user_profile):
@@ -309,12 +300,10 @@ def _get_users(discussion_entity_type, discussion_entity, username_profile_dict)
 
         A dict of users with username as key and user profile details as value.
     """
-    users = {}
-    if discussion_entity_type == DISCUSSIONENTITY.COMMENT and discussion_entity['endorsed']:
-        users[discussion_entity['endorsed_by']] = _user_profile(
-            username_profile_dict[discussion_entity['endorsed_by']]
-        )
-    users[discussion_entity['author']] = _user_profile(username_profile_dict[discussion_entity['author']])
+    users = {discussion_entity['author']: _user_profile(username_profile_dict[discussion_entity['author']])}
+
+    if discussion_entity_type == DiscussionEntity.comment and discussion_entity['endorsed']:
+        users[discussion_entity['endorsed_by']] = _user_profile(username_profile_dict[discussion_entity['endorsed_by']])
     return users
 
 
@@ -338,9 +327,9 @@ def _add_additional_response_fields(
     """
     if include_profile_image:
         username_profile_dict = _get_user_profile_dict(request, usernames=','.join(usernames))
-    for discussion_entity in serialized_discussion_entities:
-        if include_profile_image:
+        for discussion_entity in serialized_discussion_entities:
             discussion_entity['users'] = _get_users(discussion_entity_type, discussion_entity, username_profile_dict)
+
     return serialized_discussion_entities
 
 
@@ -348,7 +337,7 @@ def _include_profile_image(requested_fields):
     """
     Returns True if requested_fields list has 'profile_image' entity else False
     """
-    return True if requested_fields and 'profile_image' in requested_fields else False
+    return requested_fields and 'profile_image' in requested_fields
 
 
 def _serialize_discussion_entities(request, context, discussion_entities, requested_fields, discussion_entity_type):
@@ -375,9 +364,9 @@ def _serialize_discussion_entities(request, context, discussion_entities, reques
     usernames = []
     include_profile_image = _include_profile_image(requested_fields)
     for entity in discussion_entities:
-        if discussion_entity_type == DISCUSSIONENTITY.THREAD:
+        if discussion_entity_type == DiscussionEntity.thread:
             serialized_entity = ThreadSerializer(entity, context=context).data
-        elif discussion_entity_type == DISCUSSIONENTITY.COMMENT:
+        elif discussion_entity_type == DiscussionEntity.comment:
             serialized_entity = CommentSerializer(entity, context=context).data
         results.append(serialized_entity)
 
@@ -500,7 +489,7 @@ def get_thread_list(
         raise PageNotFoundError("Page not found (No results on this page).")
 
     results = _serialize_discussion_entities(
-        request, context, paginated_results.collection, requested_fields, DISCUSSIONENTITY.THREAD
+        request, context, paginated_results.collection, requested_fields, DiscussionEntity.thread
     )
 
     paginator = DiscussionAPIPagination(
@@ -583,7 +572,7 @@ def get_comment_list(request, thread_id, endorsed, page, page_size, requested_fi
         raise PageNotFoundError("Page not found (No results on this page).")
     num_pages = (resp_total + page_size - 1) / page_size if resp_total else 1
 
-    results = _serialize_discussion_entities(request, context, responses, requested_fields, DISCUSSIONENTITY.COMMENT)
+    results = _serialize_discussion_entities(request, context, responses, requested_fields, DiscussionEntity.comment)
 
     paginator = DiscussionAPIPagination(request, page, num_pages, resp_total)
     return paginator.get_paginated_response(results)
@@ -897,7 +886,7 @@ def get_thread(request, thread_id, requested_fields=None):
         thread_id,
         retrieve_kwargs={"user_id": unicode(request.user.id)}
     )
-    return _serialize_discussion_entities(request, context, [cc_thread], requested_fields, DISCUSSIONENTITY.THREAD)[0]
+    return _serialize_discussion_entities(request, context, [cc_thread], requested_fields, DiscussionEntity.thread)[0]
 
 
 def get_response_comments(request, comment_id, page, page_size, requested_fields=None):
@@ -948,7 +937,7 @@ def get_response_comments(request, comment_id, page, page_size, requested_fields
             raise PageNotFoundError("Page not found (No results on this page).")
 
         results = _serialize_discussion_entities(
-            request, context, paged_response_comments, requested_fields, DISCUSSIONENTITY.COMMENT
+            request, context, paged_response_comments, requested_fields, DiscussionEntity.comment
         )
 
         comments_count = len(response_comments)
