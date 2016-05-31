@@ -75,7 +75,7 @@ class MaintenanceViewTestCase(ModuleStoreTestCase):
         Reverse the setup.
         """
         self.client.logout()
-        ModuleStoreTestCase.tearDown(self)
+        super(MaintenanceViewTestCase, self).tearDown()
 
 
 @ddt.ddt
@@ -170,9 +170,9 @@ class TestForcePublish(MaintenanceViewTestCase):
             error_message=error_message
         )
 
-    def test_non_split_course(self):
+    def test_mongo_course(self):
         """
-        Test that we get a error message on non-split courses.
+        Test that we get a error message on old mongo courses.
         """
         # validate non split error message
         course = CourseFactory.create(default_store=ModuleStoreEnum.Type.mongo)
@@ -192,7 +192,7 @@ class TestForcePublish(MaintenanceViewTestCase):
 
         # now course is forcefully published, we should get already published course.
         self.verify_error_message(
-            data={'course-id': unicode(course.id), 'dry-run': ''},
+            data={'course-id': unicode(course.id)},
             error_message='Course is already in published state.'
         )
 
@@ -226,6 +226,7 @@ class TestForcePublish(MaintenanceViewTestCase):
         # force publish course view
         data = {
             'course-id': unicode(course.id),
+            # dry-run is a checkbox which sends 'on' value when submitting form POST request.
             'dry-run': 'on' if is_dry_run else ''
         }
         return self.client.post(self.view_url, data=data)

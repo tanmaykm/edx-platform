@@ -11,16 +11,22 @@
   .maintenance-list {
     max-width: 1280px;
     margin: 0 auto;
-    li {
+    .view-list-container {
       padding: 10px 15px;
       background-color: #fff;
       border-bottom: 1px solid #ddd;
       &:hover {
         background-color: #fafafa;
       }
-      a {
+      .view-name {
         display: inline-block;
-        width: 250px;
+        width: 20%;
+        float: left;
+      }
+      .view-desc {
+        display: inline-block;
+        width: 80%;
+      font-size: 15px;
       }
     }
   }

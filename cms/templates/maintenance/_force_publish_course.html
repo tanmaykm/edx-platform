@@ -15,7 +15,7 @@ from openedx.core.djangolib.markup import HTML, Text
                         <label for="course-id">${_('Course ID')}</label>
                         <input id="course-id" type="text" name="course-id" aria-describedby="course-id-desc" required
                                value="${form_data['course_id']}"/>
-                        <div id="course-id-desc" class="tip tip-stacked">${_('e.g. edX+DemoX+Demo_Course')}</div>
+                        <div id="course-id-desc" class="tip tip-stacked">${_('course-v1:edX+DemoX+Demo_Course')}</div>
                         <div class="error" aria-live="polite" id="cid-error">
                         % if error:
                             ${msg}

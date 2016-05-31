@@ -28,7 +28,10 @@ MAINTENANCE_VIEWS = {
         'url': reverse_lazy('maintenance:force_publish_course'),
         'name': _('Force Publish Course'),
         'slug': 'force_publish_course',
-        'description': _('Force publish course.'),
+        'description': _('Sometimes the draft and published branches of a course can get out of sync.'
+                         'This command resets the published branch of a course to point to the draft branch,'
+                         'effectively force publishing the course.'
+                        ),
     },
 }
 
