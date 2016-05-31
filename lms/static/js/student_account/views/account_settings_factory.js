@@ -5,9 +5,10 @@
         'js/student_account/models/user_account_model',
         'js/student_account/models/user_preferences_model',
         'js/student_account/views/account_settings_fields',
-        'js/student_account/views/account_settings_view'
+        'js/student_account/views/account_settings_view',
+        'edx-ui-toolkit/js/utils/string-utils'
     ], function (gettext, $, _, Backbone, Logger, UserAccountModel, UserPreferencesModel,
-                 AccountSettingsFieldViews, AccountSettingsView) {
+                 AccountSettingsFieldViews, AccountSettingsView, StringUtils) {
 
         return function (fieldsData, authData, userAccountsApiUrl, userPreferencesApiUrl, accountUserId, platformName) {
             var accountSettingsElement, userAccountModel, userPreferencesModel, aboutSectionsData,
@@ -24,17 +25,14 @@
             aboutSectionsData = [
                  {
                     title: gettext('Basic Account Information'),
-                    subtitle: gettext(
-                        'These settings include basic information about your account. You can also ' +
-                        'specify additional information and see your linked social accounts on this page.'
-                    ),
+                    subtitle: gettext('These settings include basic information about your account. You can also specify additional information and see your linked social accounts on this page.'), /* jshint ignore:line */
                     fields: [
                         {
                             view: new AccountSettingsFieldViews.ReadonlyFieldView({
                                 model: userAccountModel,
                                 title: gettext('Username'),
                                 valueAttribute: 'username',
-                                helpMessage: interpolate_text(
+                                helpMessage: StringUtils.interpolate(
                                     gettext('The name that identifies you throughout {platform_name}. You cannot change your username.'), {platform_name: platformName}
                                 )
                             })
@@ -55,7 +53,7 @@
                                 model: userAccountModel,
                                 title: gettext('Email Address'),
                                 valueAttribute: 'email',
-                                helpMessage: interpolate_text(
+                                helpMessage: StringUtils.interpolate(
                                     gettext('The email address you use to sign in. Communications from {platform_name} and your courses are sent to this address.'), {platform_name: platformName}
                                 ),
                                 persistChanges: true
@@ -70,9 +68,9 @@
                                 emailAttribute: 'email',
                                 linkTitle: gettext('Reset Your Password'),
                                 linkHref: fieldsData.password.url,
-                                helpMessage: gettext('When you click "Reset Your Password", edX will send a message ' +
-                                    'to the email address for your edX account. Click the link in the message to ' +
-                                    'reset your password.')
+                                helpMessage: StringUtils.interpolate(
+                                    gettext('When you select "Reset Your Password", a message will be sent to the email address for your {platform_name} account. Click the link in the message to reset your password.'), {platform_name: platformName} /* jshint ignore:line */
+                                )
                             })
                         },
                         {
@@ -82,7 +80,7 @@
                                 valueAttribute: 'pref-lang',
                                 required: true,
                                 refreshPageOnSave: true,
-                                helpMessage: interpolate_text(
+                                helpMessage: StringUtils.interpolate(
                                     gettext('The language used throughout this site. This site is currently available in a limited number of languages.'), {platform_name: platformName}
                                 ),
                                 options: fieldsData.language.options,
@@ -147,9 +145,9 @@
             accountsSectionData = [
                 {
                     title: gettext('Linked Accounts'),
-                    subtitle: gettext(
-                        'You can link your social media accounts to your edX account to make signing in to edx.org ' +
-                        'and the edX mobile apps easier.'
+                    subtitle: StringUtils.interpolate(
+                        gettext('You can link your social media accounts to simplify signing in to {platform_name}.'),
+                        {platform_name: platformName}
                     ),
                     fields: _.map(authData.providers, function(provider) {
                         return {
@@ -160,7 +158,8 @@
                                 connected: provider.connected,
                                 connectUrl: provider.connect_url,
                                 acceptsLogins: provider.accepts_logins,
-                                disconnectUrl: provider.disconnect_url
+                                disconnectUrl: provider.disconnect_url,
+                                platformName: platformName
                             })
                         };
                     })

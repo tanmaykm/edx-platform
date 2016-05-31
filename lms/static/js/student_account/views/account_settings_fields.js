@@ -10,7 +10,8 @@
         'text!templates/fields/field_readonly_account.underscore',
         'text!templates/fields/field_link_account.underscore',
         'text!templates/fields/field_dropdown_account.underscore',
-        'text!templates/fields/field_social_link_account.underscore'
+        'text!templates/fields/field_social_link_account.underscore',
+        'edx-ui-toolkit/js/utils/string-utils'
     ], function (
         gettext, $, _, Backbone,
         FieldViews,
@@ -18,7 +19,9 @@
         field_readonly_account_template,
         field_link_account_template,
         field_dropdown_account_template,
-        field_social_link_template)
+        field_social_link_template,
+        StringUtils
+    )
     {
 
         var AccountSettingsFieldViews = {
@@ -34,12 +37,8 @@
             EmailFieldView: FieldViews.TextFieldView.extend({
                 fieldTemplate: field_text_account_template,
                 successMessage: function () {
-                    return this.indicators.success + window.interpolate_text(
-                            gettext(
-                                'We\'ve sent a confirmation message to {new_email_address}. Click the link in the ' +
-                                'message to update your email address.'
-                            ),
-                            {'new_email_address': this.fieldValue()}
+                    return this.indicators.success + StringUtils.interpolate(
+                            gettext('We\'ve sent a confirmation message to {new_email_address}. Click the link in the message to update your email address.'), {'new_email_address': this.fieldValue()}     /* jshint ignore:line */
                         );
                 }
             }),
@@ -102,12 +101,8 @@
                     });
                 },
                 successMessage: function () {
-                    return this.indicators.success + window.interpolate_text(
-                            gettext(
-                                'We\'ve sent a message to {email_address}. Click the link in the message to reset ' +
-                                'your password.'
-                            ),
-                            {'email_address': this.model.get(this.options.emailAttribute)}
+                    return this.indicators.success + StringUtils.interpolate(
+                            gettext('We\'ve sent a message to {email_address}. Click the link in the message to reset your password.'), {'email_address': this.model.get(this.options.emailAttribute)}      /* jshint ignore:line */
                         );
                 }
             }),
@@ -144,27 +139,23 @@
                     var linkTitle = '',
                         linkClass = '',
                         subTitle = '',
-                        screenReaderTitle = window.interpolate_text(
+                        screenReaderTitle = StringUtils.interpolate(
                             gettext("Link your {accountName} account"), {accountName: this.options.title}
                         );
                     if (this.options.connected) {
                         linkTitle = gettext('Unlink This Account');
                         linkClass = 'social-field-linked';
-                        subTitle = window.interpolate_text(
-                            gettext('You can use your {accountName} account to sign in to your edX account.'),
-                            {accountName: this.options.title}
+                        subTitle = StringUtils.interpolate(
+                            gettext('You can use your {accountName} account to sign in to your {platformName} account.'), {accountName: this.options.title, platformName: this.options.platformName}      /* jshint ignore:line */
                         );
-                        screenReaderTitle = window.interpolate_text(
+                        screenReaderTitle = StringUtils.interpolate(
                             gettext("Unlink your {accountName} account"), {accountName: this.options.title}
                         );
                     } else if (this.options.acceptsLogins) {
                         linkTitle = gettext('Link Your Account');
                         linkClass = 'social-field-unlinked';
-                        subTitle = window.interpolate_text(
-                            gettext(
-                                'Link your {accountName} account to your edX account and ' +
-                                'use {accountName} to sign in to edX.'
-                            ), {accountName: this.options.title}
+                        subTitle = StringUtils.interpolate(
+                            gettext('Link your {accountName} account to your {platformName} account and use {accountName} to sign in to {platformName}.'), {accountName: this.options.title, platformName: this.options.platformName}     /* jshint ignore:line */
                         );
                     }
 
