@@ -99,9 +99,10 @@ def get_template_path_with_theme(relative_path):
     # strip `/` if present at the start of relative_path
     template_name = re.sub(r'^/+', '', relative_path)
 
-    template_path = theme.path / template_name
-    if template_path.exists():
-        return template_path
+    template_path = theme.template_path / template_name
+    absolute_path = theme.path / "templates" / template_name
+    if absolute_path.exists():
+        return str(template_path)
     else:
         return relative_path
 
@@ -434,6 +435,10 @@ class Theme(object):
     @property
     def path(self):
         return Path(self.themes_base_dir) / self.theme_dir_name / get_project_root_name()
+
+    @property
+    def template_path(self):
+        return Path(self.theme_dir_name) / get_project_root_name() / 'templates'
 
     @property
     def template_dirs(self):
