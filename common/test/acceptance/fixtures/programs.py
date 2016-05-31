@@ -19,31 +19,36 @@ class ProgramsFixture(object):
     Interface to set up mock responses from the Programs stub server.
     """
 
-    def install_programs(self, fake_programs):
+    def install_programs(self, fake_programs, program_id=None):
         """
-        Sets the response data for the programs list endpoint.
+        Sets the response data for Programs API endpoints.
 
         At present, `fake_programs` must be a iterable of FakeProgram named tuples.
         """
-        programs = []
-        for program in fake_programs:
-            run_mode = factories.RunMode(course_key=program.course_id)
-            course_code = factories.CourseCode(run_modes=[run_mode])
-            org = factories.Organization(key=program.org_key)
+        if program_id:
+            path = 'programs/{}'.format(program_id)
+            api_result = fake_programs[0]
+        else:
+            programs = []
+            for program in fake_programs:
+                run_mode = factories.RunMode(course_key=program.course_id)
+                course_code = factories.CourseCode(run_modes=[run_mode])
+                org = factories.Organization(key=program.org_key)
 
-            program = factories.Program(
-                name=program.name,
-                status=program.status,
-                organizations=[org],
-                course_codes=[course_code]
-            )
-            programs.append(program)
+                program = factories.Program(
+                    name=program.name,
+                    status=program.status,
+                    organizations=[org],
+                    course_codes=[course_code]
+                )
+                programs.append(program)
 
-        api_result = {'results': programs}
+            path = 'programs'
+            api_result = {'results': programs}
 
         requests.put(
             '{}/set_config'.format(PROGRAMS_STUB_URL),
-            data={'programs': json.dumps(api_result)},
+            data={path: json.dumps(api_result)},
         )
 
 
