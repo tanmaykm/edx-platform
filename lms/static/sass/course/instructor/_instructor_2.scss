@@ -415,13 +415,33 @@
     .field {
       margin-bottom: $baseline;
       padding: 0;
-
-      .label {
-        display: block;
-      }
+      @include clearfix();
 
       ul {
         list-style-type: none;
+      }
+
+      .email-targets-label {
+        display: block;
+        margin-bottom: 1em;
+      }
+
+      .email-targets-primary {
+        float: left;
+        display: table-cell;
+        margin: 0;
+      }
+
+      .email-targets-secondary {
+        display: table-cell;
+        margin: 0;
+        @include columns(2);
+        @include column-gap(0);
+
+        .subheading {
+          font-size: .9em;
+          margin-left: 20px;
+        }
       }
 
       &:last-child {

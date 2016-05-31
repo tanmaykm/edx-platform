@@ -9,8 +9,8 @@ from openedx.core.djangolib.markup import HTML
   <div class="request-response msg msg-confirm copy" id="request-response"></div>
   <ul class="list-fields">
     <li class="field">
-        ${_("Send to:")}
-        <ul role="group" aria-label="${_('Send to:')}">
+        <div class="email-targets-label">${_("Send to:")}</div>
+        <ul role="group" aria-label="${_('Send to:')}" class="email-targets-primary">
             <li>
                 <label>
                     <input type="checkbox" name="send_to" value="myself">
@@ -33,6 +33,30 @@ from openedx.core.djangolib.markup import HTML
                 </label>
             </li>
         </ul>
+        %if len(section_data['cohorts']) > 0:
+        <ul role="group" aria-label="${_('Send to:')}" class="email-targets-secondary">
+            <li>
+                <label>
+                    <input type="checkbox" name="send_to" value="cohort:default">
+                        ${_("Default Group")}
+                    </input>
+                    <br/>
+                    <div class="subheading">
+                        ${_("(Students without cohort assignment)")}
+                    </div>
+                </label>
+            </li>
+        %for cohort in section_data['cohorts']:
+            <li>
+                <label>
+                    <input type="checkbox" name="send_to" value="cohort:${cohort.id}">
+                        ${_("Cohort: ") + cohort.name}
+                    </input>
+                </label>
+            </li>
+        %endfor
+        </ul>
+        %endif
     </li>
     <li class="field">
         <label>
