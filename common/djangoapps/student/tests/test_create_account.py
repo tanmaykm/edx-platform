@@ -387,8 +387,12 @@ class TestCreateAccountValidation(TestCase):
             assert_email_error("A properly formatted e-mail is required")
 
         # Too long
-        params["email"] = "this_email_address_has_76_characters_in_it_so_it_is_unacceptable@example.com"
-        assert_email_error("Email cannot be more than 75 characters long")
+        params["email"] = '{0}@example.com'.format(
+            'this_email_address_has_254_characters_in_it_so_it_is_unacceptable' * 4)
+
+        # Length of email should be greater than 254 characters
+        self.assertGreater(len(params['email']), 254)
+        assert_email_error("Email cannot be more than 254 characters long")
 
         # Invalid
         params["email"] = "not_an_email_address"
