@@ -152,12 +152,12 @@ class AccountViewSet(ViewSet):
         """
         GET /api/user/v1/accounts?username={username1,username2}
         """
-        username = request.GET.get('username')
+        usernames = request.GET.get('username')
         try:
-            if username:
-                username = username[:-1].split(',') if username[-1:] == ',' else username.split(',')
+            if usernames:
+                usernames = usernames.strip(',').split(',')
             account_settings = get_account_settings(
-                request, username, view=request.query_params.get('view'))
+                request, usernames, view=request.query_params.get('view'))
         except UserNotFound:
             return Response(status=status.HTTP_403_FORBIDDEN if request.user.is_staff else status.HTTP_404_NOT_FOUND)
 

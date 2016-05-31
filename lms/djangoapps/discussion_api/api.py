@@ -268,7 +268,7 @@ def _get_user_profile_dict(request, usernames):
 
         A dict with username as key and user profile details as value.
     """
-    request.GET = request.GET.copy()
+    request.GET = request.GET.copy()  # Make a mutable copy of the GET parameters.
     request.GET['username'] = usernames
     user_profile_details = AccountViewSet.as_view({'get': 'list'})(request).data
 
@@ -277,7 +277,8 @@ def _get_user_profile_dict(request, usernames):
 
 def _user_profile(user_profile):
     """
-    Returns the user profile object with profile_image details.
+    Returns the user profile object. For now, this just comprises the
+    profile_image details.
     """
     return {
         'profile': {
