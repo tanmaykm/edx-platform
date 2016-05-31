@@ -75,12 +75,8 @@ class AccountSettingsPage(FieldsMixin, PageObject):
         query = self.q(css='.u-field-{} .u-field-order-{}'.format(field_id, field_name))
         return query.text[0] if query.present else None
 
-    def hover_over_and_button_is_visible(self, field_id):
+    def order_button_is_visible(self, field_id):
         """ Check that if hovering over the order history row shows the
         order detail link or not.
         """
-        element_to_hover_over = self.q(css='.u-field-{}'.format(field_id)).results[0]
-        hover = ActionChains(self.browser).move_to_element(element_to_hover_over)
-        hover.perform()
-
         return self.q(css='.u-field-{} .u-field-{}'.format(field_id, 'link')).visible

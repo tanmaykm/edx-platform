@@ -188,7 +188,9 @@
             ordersSectionData = [
                 {
                     title: gettext('My Orders'),
-                    subtitle: gettext('This page contains information about orders that you have placed with edX.'),
+                    subtitle: window.interpolate_text(
+                        gettext('This page contains information about orders that you have placed with {platform_name}.'), {platform_name: platformName}    /* jshint ignore:line */
+                    ),
                     fields: _.map(ordersHistoryData, function(order) {
                         orderNumber = order.number;
                         if (orderNumber === 'ORDER NUMBER') {

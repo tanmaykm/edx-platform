@@ -459,7 +459,7 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, WebAppTest):
                 self.account_settings_page.get_value_of_order_history_row_item('order-Edx-123', field_name), value
             )
 
-        self.assertTrue(self.account_settings_page.hover_over_and_button_is_visible('order-Edx-123'))
+        self.assertTrue(self.account_settings_page.order_button_is_visible('order-Edx-123'))
 
 
 @attr('a11y')
