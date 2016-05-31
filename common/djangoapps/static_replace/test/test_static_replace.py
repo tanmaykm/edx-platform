@@ -490,9 +490,7 @@ class CanonicalContentTest(SharedModuleStoreTestCase):
             th_ext=th_ext
         )
 
-        # Adjust for content digest and filetype exclusions.
-        _, _, relative_path, _, _, _ = urlparse(start)
-
+        # Adjust for content digest.
         digest = CanonicalContentTest.get_content_digest_for_asset_path(prefix, start)
         if digest:
             adjusted_asset_key = 'assets/courseware/[a-f0-9]{{32}}/asset-v1:a+b+{}+type@asset+block'.format(prefix)
@@ -514,11 +512,8 @@ class CanonicalContentTest(SharedModuleStoreTestCase):
 
         with check_mongo_calls(mongo_calls):
             asset_path = StaticContent.get_canonicalized_asset_path(self.courses[prefix].id, start, base_url, exts)
-            expected_escaped = expected.replace('+', '\+').replace('?', '\?')
-            print start
-            print expected_escaped
-            print asset_path
-            self.assertTrue(re.match(expected_escaped, asset_path) is not None)
+            expected_escaped = expected.replace('+', r'\+').replace('?', r'\?')
+            self.assertIsNotNone(re.match(expected_escaped, asset_path))
 
     @ddt.data(
         # No leading slash.
@@ -706,5 +701,5 @@ class CanonicalContentTest(SharedModuleStoreTestCase):
 
         with check_mongo_calls(mongo_calls):
             asset_path = StaticContent.get_canonicalized_asset_path(self.courses[prefix].id, start, base_url, exts)
-            expected_escaped = expected.replace('+', '\+').replace('?', '\?')
-            self.assertTrue(re.match(expected_escaped, asset_path) is not None)
+            expected_escaped = expected.replace('+', r'\+').replace('?', r'\?')
+            self.assertIsNotNone(re.match(expected_escaped, asset_path))
