@@ -62,9 +62,7 @@ define([
         return new collectionType(
             createMockTeamsResponse(responseOptions),
             _.extend({
-                state: {
-                    pageSize: 5
-                },
+                perPage: 5,
                 teamEvents: teamEvents,
                 course_id: testCourseID,
                 parse: true
@@ -288,9 +286,6 @@ define([
                 sort_order: 'name'
             },
             {
-                state: {
-                    pageSize: 5
-                },
                 teamEvents: teamEvents,
                 course_id: testCourseID,
                 parse: true,
