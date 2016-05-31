@@ -33,6 +33,15 @@ class Command(BaseCommand):
 
         # Named (optional) arguments
         parser.add_argument(
+            '--theme-dirs',
+            dest='theme_dirs',
+            type=str,
+            nargs='+',
+            default=get_theme_base_dirs(),
+            help="List of themes whose sass need to compiled. Or 'no'/'all' to compile for no/all themes.",
+        )
+
+        parser.add_argument(
             '--themes',
             type=str,
             nargs='+',
@@ -72,12 +81,12 @@ class Command(BaseCommand):
         """
         system = options.get("system", ALL_SYSTEMS)
         given_themes = options.get("themes", ["all"])
+        theme_dirs = options.get("theme_dirs", get_theme_base_dirs())
 
         force = options.get("force", True)
         debug = options.get("debug", True)
 
-        theme_dirs = get_theme_base_dirs()
-        available_themes = {t.theme_dir: t for t in get_themes()}
+        available_themes = {t.theme_dir_name: t for t in get_themes()}
 
         if 'no' in given_themes or 'all' in given_themes:
             # Raise error if 'all' or 'no' is present and theme names are also given.
@@ -108,9 +117,9 @@ class Command(BaseCommand):
         Handle compile_sass command.
         """
         system, theme_dirs, themes, force, debug = self.parse_arguments(*args, **options)
-        themes = [theme.theme_dir for theme in themes]
+        themes = [theme.theme_dir_name for theme in themes]
 
         call_task(
             'pavelib.assets.compile_sass',
-            options={'system': system, 'theme_dirs': theme_dirs, 'themes': themes, 'force': force, 'debug': debug},
+            options={'system': system, 'theme-dirs': theme_dirs, 'themes': themes, 'force': force, 'debug': debug},
         )

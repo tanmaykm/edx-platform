@@ -42,7 +42,7 @@ def run():
     # Comprehensive theming needs to be set up before django startup,
     # because modifying django template paths after startup has no effect.
     if is_comprehensive_theming_enabled():
-        enable_theming(settings.COMPREHENSIVE_THEME_DIRS)
+        enable_theming()
 
     # We currently use 2 template rendering engines, mako and django_templates,
     # and one of them (django templates), requires the directories be added

@@ -159,7 +159,7 @@ class ComprehensiveThemingCachedFilesMixin(CachedFilesMixin):
             # if themed asset does not exists then use default asset
             theme = name.split("/", 1)[0]
             # verify that themed asset was accessed
-            if theme in [theme.theme_dir for theme in get_themes()]:
+            if theme in [theme.theme_dir_name for theme in get_themes()]:
                 asset_name = "/".join(name.split("/")[1:])
 
         return super(ComprehensiveThemingCachedFilesMixin, self).url(asset_name, force)
@@ -252,8 +252,8 @@ class ThemePipelineMixin(PipelineMixin):
         themes = get_themes()
 
         for theme in themes:
-            css_packages = self.get_themed_packages(theme.theme_dir, settings.PIPELINE_CSS)
-            js_packages = self.get_themed_packages(theme.theme_dir, settings.PIPELINE_JS)
+            css_packages = self.get_themed_packages(theme.theme_dir_name, settings.PIPELINE_CSS)
+            js_packages = self.get_themed_packages(theme.theme_dir_name, settings.PIPELINE_JS)
 
             from pipeline.packager import Packager
             packager = Packager(storage=self, css_packages=css_packages, js_packages=js_packages)
