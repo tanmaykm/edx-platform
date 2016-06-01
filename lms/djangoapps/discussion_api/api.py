@@ -24,7 +24,7 @@ from discussion_api.permissions import (
     get_initializable_comment_fields,
     get_initializable_thread_fields,
 )
-from discussion_api.serializers import CommentSerializer, ThreadSerializer, get_context
+from discussion_api.serializers import CommentSerializer, ThreadSerializer, get_context, DiscussionTopicSerializer
 from django_comment_client.base.views import (
     track_comment_created_event,
     track_thread_created_event,
@@ -198,12 +198,12 @@ def get_courseware_topics(request, course_key, course, topic_ids):
             This is optional. If None then all course topics are returned.
 
     Returns:
-        A list of courseware topics and a list of existing topics among
+        A list of courseware topics and a set of existing topics among
         topic_ids.
 
     """
     courseware_topics = []
-    existing_topic_ids = []
+    existing_topic_ids = set()
 
     def get_module_sort_key(module):
         """
@@ -230,10 +230,10 @@ def get_courseware_topics(request, course_key, course, topic_ids):
                     module.discussion_target,
                     get_thread_list_url(request, course_key, [module.discussion_id]),
                 )
-                children.append(discussion_topic.__dict__)
+                children.append(discussion_topic)
 
                 if topic_ids and module.discussion_id in topic_ids:
-                    existing_topic_ids.append(module.discussion_id)
+                    existing_topic_ids.add(module.discussion_id)
 
         if not topic_ids or children:
             discussion_topic = DiscussionTopic(
@@ -242,7 +242,7 @@ def get_courseware_topics(request, course_key, course, topic_ids):
                 get_thread_list_url(request, course_key, [item.discussion_id for item in get_sorted_modules(category)]),
                 children,
             )
-            courseware_topics.append(discussion_topic.__dict__)
+            courseware_topics.append(DiscussionTopicSerializer(discussion_topic).data)
 
     return courseware_topics, existing_topic_ids
 
@@ -260,21 +260,21 @@ def get_non_courseware_topics(request, course_key, course, topic_ids):
             This is optional. If None then all course topics are returned.
 
     Returns:
-        A list of non-courseware topics and a list of existing topics among
+        A list of non-courseware topics and a set of existing topics among
         topic_ids.
 
     """
     non_courseware_topics = []
-    existing_topic_ids = []
+    existing_topic_ids = set()
     for name, entry in sorted(course.discussion_topics.items(), key=lambda item: item[1].get("sort_key", item[0])):
         if not topic_ids or entry['id'] in topic_ids:
             discussion_topic = DiscussionTopic(
-                entry["id"], name, get_thread_list_url(request, course_key, [entry["id"]]),
+                entry["id"], name, get_thread_list_url(request, course_key, [entry["id"]])
             )
-            non_courseware_topics.append(discussion_topic.__dict__)
+            non_courseware_topics.append(DiscussionTopicSerializer(discussion_topic).data)
 
             if topic_ids and entry["id"] in topic_ids:
-                existing_topic_ids.append(entry["id"])
+                existing_topic_ids.add(entry["id"])
 
     return non_courseware_topics, existing_topic_ids
 
@@ -306,11 +306,11 @@ def get_course_topics(request, course_key, topic_ids=None):
     )
 
     if topic_ids:
-        not_found_topic_ids = list(set(topic_ids) - (
-            set(existing_courseware_topic_ids) | set(existing_non_courseware_topic_ids)
-        ))
+        not_found_topic_ids = topic_ids - (existing_courseware_topic_ids | existing_non_courseware_topic_ids)
         if not_found_topic_ids:
-            raise DiscussionNotFoundError("Discussion not found for '{}'.".format(",".join(not_found_topic_ids)))
+            raise DiscussionNotFoundError(
+                "Discussion not found for '{}'.".format(", ".join(str(id) for id in not_found_topic_ids))
+            )
 
     return {
         "courseware_topics": courseware_topics,

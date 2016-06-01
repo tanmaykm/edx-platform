@@ -98,7 +98,11 @@ class CourseTopicsView(DeveloperErrorViewMixin, APIView):
         course_key = CourseKey.from_string(course_id)
         topic_ids = self.request.GET.get('topic_id')
         with modulestore().bulk_operations(course_key):
-            response = get_course_topics(request, course_key, topic_ids.split(',') if topic_ids else None)
+            response = get_course_topics(
+                request,
+                course_key,
+                set(topic_ids.strip(',').split(',')) if topic_ids else None,
+            )
         return Response(response)
 
 

@@ -151,7 +151,9 @@ class CourseViewTest(DiscussionAPIViewTestMixin, ModuleStoreTestCase):
 @ddt.ddt
 @mock.patch.dict("django.conf.settings.FEATURES", {"ENABLE_DISCUSSION_SERVICE": True})
 class CourseTopicsViewTest(DiscussionAPIViewTestMixin, ModuleStoreTestCase):
-    """Tests for CourseTopicsView"""
+    """
+    Tests for CourseTopicsView
+    """
     def setUp(self):
         super(CourseTopicsViewTest, self).setUp()
         self.url = reverse("course_topics", kwargs={"course_id": unicode(self.course.id)})
@@ -183,7 +185,9 @@ class CourseTopicsViewTest(DiscussionAPIViewTestMixin, ModuleStoreTestCase):
         return course_url
 
     def make_discussion_module(self, topic_id, category, subcategory, **kwargs):
-        """Build a discussion module in self.course"""
+        """
+        Build a discussion module in self.course
+        """
         ItemFactory.create(
             parent_location=self.course.location,
             category="discussion",
