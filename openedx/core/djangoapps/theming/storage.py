@@ -107,7 +107,7 @@ class ThemeStorage(StaticFilesStorage):
             return self.exists(os.path.join(theme, name))
 
 
-class ComprehensiveThemingCachedFilesMixin(CachedFilesMixin):
+class ThemeCachedFilesMixin(CachedFilesMixin):
     """
     Comprehensive theme aware CachedFilesMixin.
     Main purpose of subclassing CachedFilesMixin is to override the following methods.
@@ -162,7 +162,7 @@ class ComprehensiveThemingCachedFilesMixin(CachedFilesMixin):
             if theme in [theme.theme_dir_name for theme in get_themes()]:
                 asset_name = "/".join(name.split("/")[1:])
 
-        return super(ComprehensiveThemingCachedFilesMixin, self).url(asset_name, force)
+        return super(ThemeCachedFilesMixin, self).url(asset_name, force)
 
     def url_converter(self, name, template=None):
         """

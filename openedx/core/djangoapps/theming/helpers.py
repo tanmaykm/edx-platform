@@ -38,11 +38,6 @@ def get_template_path(relative_path, **kwargs):
     if microsite.is_request_in_microsite():
         relative_path = microsite.get_template_path(relative_path, **kwargs)
     return relative_path
-    # template_path = get_template_path_with_theme(relative_path)
-    # if template_path == relative_path:  # we don't have a theme now look into microsites
-    #     template_path = microsite.get_template_path(relative_path, **kwargs)
-    #
-    # return template_path
 
 
 def is_request_in_themed_site():

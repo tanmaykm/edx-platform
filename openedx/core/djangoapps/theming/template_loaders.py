@@ -6,17 +6,8 @@ from django.core.exceptions import SuspiciousFileOperation
 from django.template.loaders.filesystem import Loader as FilesystemLoader
 
 from edxmako.makoloader import MakoLoader
-from openedx.core.djangoapps.theming.helpers import get_template_path_with_theme, get_current_request, \
+from openedx.core.djangoapps.theming.helpers import get_current_request, \
     get_current_theme, get_all_theme_template_dirs
-
-
-# class ThemeTemplateLoader(MakoLoader):
-#     """
-#     This is a Django loader object which will load the template based on current request and its corresponding theme.
-#     """
-#     def __call__(self, template_name, template_dirs=None):
-#         template_name = get_template_path_with_theme(template_name).lstrip("/")
-#         return self.load_template(template_name, template_dirs)
 
 
 class ThemeTemplateLoader(MakoLoader):
