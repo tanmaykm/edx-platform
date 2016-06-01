@@ -562,15 +562,21 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
             if value:
                 if key in self.fields and self.fields[key].is_set_on(self):
                     try:
-                        xml.set(key, unicode(value, 'utf-8'))
-                    except (ValueError, UnicodeDecodeError):
+                        xml.set(key, unicode(value))
+                    except (ValueError, UnicodeDecodeError) as exception:
                         exception_message = "Block-location:{location}, Key:{key}, Value:{value}".format(
                             location=unicode(self.location),
                             key=key,
                             value=value
                         )
                         log.exception(exception_message)
-                        raise
+
+                        # If exception is UnicodeDecodeError then set value using unicode 'utf-8' scheme.
+                        if type(exception) == UnicodeDecodeError:
+                            log.info("Setting xml value using 'utf-8' scheme.")
+                            xml.set(key, unicode(value, 'utf-8'))
+                        else:
+                            raise
 
         for source in self.html5_sources:
             ele = etree.Element('source')
