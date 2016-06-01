@@ -71,6 +71,9 @@ from lms.envs.common import (
 
     # Theme to use when no site or site theme is defined,
     DEFAULT_SITE_THEME,
+
+    # Enable or disable theming
+    ENABLE_COMPREHENSIVE_THEMING
 )
 from path import Path as path
 from warnings import simplefilter

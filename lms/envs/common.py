@@ -2901,6 +2901,8 @@ COMPREHENSIVE_THEME_DIRS = [REPO_ROOT / "themes"]
 # set to None if you want to use openedx theme
 DEFAULT_SITE_THEME = None
 
+ENABLE_COMPREHENSIVE_THEMING = True
+
 # API access management
 API_ACCESS_MANAGER_EMAIL = 'api-access@example.com'
 API_ACCESS_FROM_EMAIL = 'api-requests@example.com'

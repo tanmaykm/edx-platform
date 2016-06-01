@@ -246,31 +246,6 @@ def get_theme_base_dir(theme_dir_name, suppress_error=False):
         ))
 
 
-def get_current_site_theme_dir():
-    """
-    Return theme directory for the current site.
-
-    Example:
-        >> get_current_site_theme_dir()
-        'red-theme'
-
-    Returns:
-         (str): theme directory for current site
-    """
-    site = get_current_site()
-    if not site:
-        return None
-
-    if microsite.is_request_in_microsite():
-        return None
-
-    site_theme = get_current_site_theme()
-
-    # if site theme dir is not in cache and comprehensive theming is enabled then pull it from db.
-    if site_theme:
-        return site_theme.theme_dir_name
-
-
 def get_project_root_name():
     """
     Return root name for the current project
@@ -333,7 +308,11 @@ def is_comprehensive_theming_enabled():
     Returns:
          (bool): True if comprehensive theming is enabled else False
     """
-    return True if settings.COMPREHENSIVE_THEME_DIRS else False
+    # Disable theming for microsites
+    if microsite.is_request_in_microsite():
+        return False
+
+    return settings.ENABLE_COMPREHENSIVE_THEMING
 
 
 def get_static_file_url(asset):
