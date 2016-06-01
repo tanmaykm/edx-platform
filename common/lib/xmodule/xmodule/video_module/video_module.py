@@ -16,7 +16,6 @@ import copy
 import json
 import logging
 import random
-import sys
 from collections import OrderedDict
 from operator import itemgetter
 from lxml import etree

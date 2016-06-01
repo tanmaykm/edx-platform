@@ -15,7 +15,6 @@ the course, section, subsection, unit, etc.
 import unittest
 import datetime
 from uuid import uuid4
-import unittest
 
 from lxml import etree
 from mock import ANY, Mock, patch
