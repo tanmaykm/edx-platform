@@ -529,7 +529,7 @@ class BrowseTopicsTest(TeamsTabBase):
         When I visit the Teams page
         And I browse topics
         And I should see corrected number of topic cards
-        Then I should see the correct page header
+        And I should see the correct page header
         And I should not see a pagination footer
         """
         self.set_team_configuration({u"max_team_size": 10, u"topics": self.create_topics(10)})

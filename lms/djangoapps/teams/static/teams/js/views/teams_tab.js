@@ -346,7 +346,7 @@
                                         collection: collection,
                                         breadcrumbs: view.createBreadcrumbs(),
                                         showSortControls: true
-                                        });
+                                    });
                                     deferred.resolve(teamsView);
                                 });
                             });
