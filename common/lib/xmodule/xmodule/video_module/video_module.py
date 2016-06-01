@@ -16,6 +16,7 @@ import copy
 import json
 import logging
 import random
+import sys
 from collections import OrderedDict
 from operator import itemgetter
 from lxml import etree
@@ -562,15 +563,15 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
             if value:
                 if key in self.fields and self.fields[key].is_set_on(self):
                     try:
-                        xml.set(key, unicode(value))
-                    except ValueError as exception:
-                        exception_message = "{message}, Block-location:{location}, Key:{key}, Value:{value}".format(
-                            message=exception.message,
+                        xml.set(key, unicode(value, 'utf-8'))
+                    except (ValueError, UnicodeDecodeError):
+                        exception_message = "Block-location:{location}, Key:{key}, Value:{value}".format(
                             location=unicode(self.location),
                             key=key,
-                            value=unicode(value)
+                            value=value
                         )
-                        raise ValueError(exception_message)
+                        log.exception(exception_message)
+                        raise
 
         for source in self.html5_sources:
             ele = etree.Element('source')
