@@ -3,15 +3,16 @@ Test the Data Aggregation Layer for Course Enrollments.
 
 """
 import datetime
+import unittest
+
 import ddt
 from mock import patch
 from nose.tools import raises
 from pytz import UTC
-import unittest
-
 from django.conf import settings
-from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
-from xmodule.modulestore.tests.factories import CourseFactory
+
+from course_modes.models import CourseMode
+from enrollment import data
 from enrollment.errors import (
     UserNotFoundError, CourseEnrollmentClosedError,
     CourseEnrollmentFullError, CourseEnrollmentExistsError,
@@ -19,8 +20,8 @@ from enrollment.errors import (
 from openedx.core.lib.exceptions import CourseNotFoundError
 from student.tests.factories import UserFactory, CourseModeFactory
 from student.models import CourseEnrollment, EnrollmentClosedError, CourseFullError, AlreadyEnrolledError
-from enrollment import data
-from course_modes.models import CourseMode
+from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
+from xmodule.modulestore.tests.factories import CourseFactory
 
 
 @ddt.ddt
@@ -262,8 +263,10 @@ class EnrollmentDataTest(ModuleStoreTestCase):
         self.assertIsNone(enrollment)
 
     def test_get_course_with_expired_mode_included(self):
-        expected_modes = ['honor', 'verified', 'audit']
-        self._create_course_modes(['honor', 'verified', 'audit'], course=self.course)
+        """ Verify that method returns expired modes if include_expired
+        is true. """
+        modes = ['honor', 'verified', 'audit']
+        self._create_course_modes(modes, course=self.course)
         # Change verified mode expiration.
         mode = CourseMode.objects.get(course_id=self.course.id, mode_slug=CourseMode.VERIFIED)
         mode.expiration_datetime = datetime.datetime(year=1970, month=1, day=1, tzinfo=UTC)
@@ -271,10 +274,13 @@ class EnrollmentDataTest(ModuleStoreTestCase):
 
         result_course = data.get_course_enrollment_info(unicode(self.course.id), include_expired=True)
         result_slugs = [mode['slug'] for mode in result_course['course_modes']]
-        for course_mode in expected_modes:
+        for course_mode in modes:
             self.assertIn(course_mode, result_slugs)
 
     def test_get_course_without_expired_mode_included(self):
+        """ Verify that method does not returns expired modes if include_expired
+        is false. """
+
         self._create_course_modes(['honor', 'verified', 'audit'], course=self.course)
         # Change verified mode expiration.
         mode = CourseMode.objects.get(course_id=self.course.id, mode_slug=CourseMode.VERIFIED)

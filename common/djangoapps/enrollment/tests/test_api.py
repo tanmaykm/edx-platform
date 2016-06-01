@@ -232,6 +232,9 @@ class EnrollmentTest(CacheIsolationTestCase):
         self.assertEqual(details, cached_details)
 
     def test_update_enrollment_expired_mode_with_error(self):
+        """ Verify that if verified mode is expired then enrollment cannot be updated if
+        include_expired flag is false."""
+
         # Add fake course enrollment information to the fake data API
         fake_data_api.add_course(self.COURSE_ID, course_modes=['honor', 'verified', 'audit'])
         # Enroll in the course and verify the URL we get sent to
@@ -249,6 +252,9 @@ class EnrollmentTest(CacheIsolationTestCase):
             api.update_enrollment(self.USERNAME, self.COURSE_ID, mode='verified', include_expired=False)
 
     def test_update_enrollment_expired_mode(self):
+        """ Verify that if verified mode is expired then enrollment can be updated if
+        include_expired flag is true."""
+
         # Add fake course enrollment information to the fake data API
         fake_data_api.add_course(self.COURSE_ID, course_modes=['honor', 'verified', 'audit'])
         # Enroll in the course and verify the URL we get sent to
@@ -268,6 +274,9 @@ class EnrollmentTest(CacheIsolationTestCase):
 
     @ddt.data(True, False)
     def test_unenroll_with_expired_mode(self, include_expired):
+        """ Verify that un-enrol will work fine for expired courses whether include_expired
+        is true or false."""
+
         # Add a fake course enrollment information to the fake data API
         course_modes = ['honor', 'verified', 'audit']
         fake_data_api.add_course(self.COURSE_ID, course_modes=course_modes)
