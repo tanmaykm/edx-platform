@@ -2,12 +2,12 @@
   <article class="content-main">
   <% if ( hasPaid ) { %>
      <h3 class="title">
-      <%= HtmlUtils.interpolateHtml(
+      <%= edx.HtmlUtils.interpolateHtml(
           gettext( "Thanks for returning to verify your ID in: {courseName}"),
-          { courseName: HtmlUtils.joinHtml(
-            HtmlUtils.HTML('<span class="course-title">'),
+          { courseName: edx.HtmlUtils.joinHtml(
+            edx.HtmlUtils.HTML('<span class="course-title">'),
             courseName,
-            HtmlUtils.HTML('</span>')
+            edx.HtmlUtils.HTML('</span>')
           ) }
         ) %>
      </h3>

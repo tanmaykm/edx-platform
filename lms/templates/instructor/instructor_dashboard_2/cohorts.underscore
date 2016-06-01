@@ -40,11 +40,11 @@
         <div class="cohort-management-supplemental">
             <p class="">
                 <span class="icon fa fa-info-circle" aria-hidden="true"></span>
-                <%= HtmlUtils.interpolateHtml(
+                <%= edx.HtmlUtils.interpolateHtml(
                     gettext('To review student cohort assignments or see the results of uploading a CSV file, download course profile information or cohort results on {link_start} the Data Download page. {link_end}'),
                     {
-                        link_start: HtmlUtils.HTML('<a href="" class="link-cross-reference" data-section="data_download">'),
-                        link_end: HtmlUtils.HTML('</a>')
+                        link_start: edx.HtmlUtils.HTML('<a href="" class="link-cross-reference" data-section="data_download">'),
+                        link_end: edx.HtmlUtils.HTML('</a>')
                     })
                 %>
             </p>

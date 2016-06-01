@@ -98,12 +98,12 @@
                                         <p class="copy-error">
                                             <span class="icon fa fa-exclamation-triangle" aria-hidden="true"></span>
                                             <%=
-                                            HtmlUtils.interpolateHtml(
+                                            edx.HtmlUtils.interpolateHtml(
                                                 // Translators: Any text between {screen_reader_start} and {screen_reader_end} is only read by screen readers and never shown in the browser.
                                                 gettext('{screen_reader_start}Warning:{screen_reader_end} The previously selected content group was deleted. Select another content group.'),
                                                 {
-                                                    screen_reader_start: HtmlUtils.HTML('<span class="sr">'),
-                                                    screen_reader_end: HtmlUtils.HTML('</span>')
+                                                    screen_reader_start: edx.HtmlUtils.HTML('<span class="sr">'),
+                                                    screen_reader_end: edx.HtmlUtils.HTML('</span>')
                                                 }
                                             )
                                             %>
@@ -117,12 +117,12 @@
                                     <p class="copy-error">
                                         <span class="icon fa fa-exclamation-triangle" aria-hidden="true"></span>
                                         <%=
-                                        HtmlUtils.interpolateHtml(
+                                        edx.HtmlUtils.interpolateHtml(
                                             // Translators: Any text between {screen_reader_start} and {screen_reader_end} is only read by screen readers and never shown in the browser.
                                             gettext('{screen_reader_start}Warning:{screen_reader_end} No content groups exist.'),
                                             {
-                                                screen_reader_start: HtmlUtils.HTML('<span class="sr">'),
-                                                screen_reader_end: HtmlUtils.HTML('</span>')
+                                                screen_reader_start: edx.HtmlUtils.HTML('<span class="sr">'),
+                                                screen_reader_end: edx.HtmlUtils.HTML('</span>')
                                             }
                                         )
                                         %>

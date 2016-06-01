@@ -51,13 +51,13 @@
       </ol>
     <% } else { %>
         <p class="group-configuration-usage-text">
-            <%= HtmlUtils.interpolateHtml(
+            <%= edx.HtmlUtils.interpolateHtml(
                 gettext('This content group is not in use. Add a content group to any unit from the {linkStart}Course Outline{linkEnd}.'),
                 {
-                    linkStart: HtmlUtils.interpolateHtml(
-                        HtmlUtils.HTML('<a href="{courseOutlineUrl}" title="{courseOutlineTitle}">'),
+                    linkStart: edx.HtmlUtils.interpolateHtml(
+                        edx.HtmlUtils.HTML('<a href="{courseOutlineUrl}" title="{courseOutlineTitle}">'),
                         {courseOutlineUrl: courseOutlineUrl, courseOutlineTitle: gettext('Course Outline')}),
-                    linkEnd: HtmlUtils.HTML('</a>')
+                    linkEnd: edx.HtmlUtils.HTML('</a>')
                 })
             %>
         </p>

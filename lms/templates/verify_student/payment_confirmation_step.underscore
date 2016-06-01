@@ -1,12 +1,12 @@
 <div class="wrapper-content-main payment-confirmation-step">
   <article class="content-main">
     <h3 class="title">
-      <%= HtmlUtils.interpolateHtml(
+      <%= edx.HtmlUtils.interpolateHtml(
         gettext( "Thank you! We have received your payment for {courseName}." ),
-        { courseName: HtmlUtils.joinHtml(
-          HtmlUtils.HTML('<span class="course-title">'),
+        { courseName: edx.HtmlUtils.joinHtml(
+          edx.HtmlUtils.HTML('<span class="course-title">'),
           courseName,
-          HtmlUtils.HTML('</span>')
+          edx.HtmlUtils.HTML('</span>')
         ) }
       ) %>
     </h3>

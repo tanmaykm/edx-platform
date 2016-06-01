@@ -2,23 +2,23 @@
   <div class="review view">
     <% if ( !upgrade ) { %>
       <h2 class="title center-col">
-        <%= HtmlUtils.interpolateHtml(
+        <%= edx.HtmlUtils.interpolateHtml(
             gettext( "You are enrolling in: {courseName}"),
-            { courseName: HtmlUtils.joinHtml(
-                HtmlUtils.HTML('<span class="course-title">'),
+            { courseName: edx.HtmlUtils.joinHtml(
+                edx.HtmlUtils.HTML('<span class="course-title">'),
                 courseName,
-                HtmlUtils.HTML('</span>')
+                edx.HtmlUtils.HTML('</span>')
             ) }
         ) %>
       </h2>
     <% } else { %>
       <h2 class="title">
-        <%= HtmlUtils.interpolateHtml(
+        <%= edx.HtmlUtils.interpolateHtml(
             gettext( "You are upgrading your enrollment for: {courseName}"),
-            { courseName: HtmlUtils.joinHtml(
-                HtmlUtils.HTML('<span class="course-title">'),
+            { courseName: edx.HtmlUtils.joinHtml(
+                edx.HtmlUtils.HTML('<span class="course-title">'),
                 courseName,
-                HtmlUtils.HTML('</span>')
+                edx.HtmlUtils.HTML('</span>')
             ) }
         ) %>
       </h2>
