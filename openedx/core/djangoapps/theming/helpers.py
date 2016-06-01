@@ -35,11 +35,14 @@ def get_template_path(relative_path, **kwargs):
     """
     This is a proxy function to hide microsite_configuration behind comprehensive theming.
     """
-    template_path = get_template_path_with_theme(relative_path)
-    if template_path == relative_path:  # we don't have a theme now look into microsites
-        template_path = microsite.get_template_path(relative_path, **kwargs)
-
-    return template_path
+    if microsite.is_request_in_microsite():
+        relative_path = microsite.get_template_path(relative_path, **kwargs)
+    return relative_path
+    # template_path = get_template_path_with_theme(relative_path)
+    # if template_path == relative_path:  # we don't have a theme now look into microsites
+    #     template_path = microsite.get_template_path(relative_path, **kwargs)
+    #
+    # return template_path
 
 
 def is_request_in_themed_site():
@@ -114,8 +117,7 @@ def get_all_theme_template_dirs():
     Example:
         >> get_all_theme_template_dirs()
         [
-            '/edx/app/ecommerce/ecommerce/themes/red-theme/templates/',
-            '/edx/app/ecommerce/ecommerce/themes/red-theme/templates/oscar/',
+            '/edx/app/edxapp/edx-platform/themes/red-theme/lms/templates/',
         ]
 
     Returns:
@@ -159,14 +161,24 @@ def strip_site_theme_templates_path(uri):
     return uri
 
 
+def get_current_request():
+    """
+    Return current request instance.
+
+    Returns:
+         (HttpRequest): returns cirrent request
+    """
+    return RequestCache.get_current_request()
+
+
 def get_current_site():
     """
     Return current site.
 
     Returns:
-         (django.contrib.sites.models.Site): theme directory for current site
+         (django.contrib.sites.models.Site): returns current site
     """
-    request = RequestCache.get_current_request()
+    request = get_current_request()
     if not request:
         return None
     return getattr(request, 'site', None)
@@ -183,7 +195,7 @@ def get_current_site_theme():
     if not is_comprehensive_theming_enabled():
         return None
 
-    request = RequestCache.get_current_request()
+    request = get_current_request()
     if not request:
         return None
     return getattr(request, 'site_theme', None)

@@ -43,7 +43,5 @@ def enable_theming():
         if locale_dir.isdir():
             settings.LOCALE_PATHS = (locale_dir, ) + settings.LOCALE_PATHS
 
-        if theme.themes_base_dir not in settings.DEFAULT_TEMPLATE_ENGINE['DIRS']:
-            settings.DEFAULT_TEMPLATE_ENGINE['DIRS'].insert(0, theme.themes_base_dir)
         if theme.themes_base_dir not in settings.MAKO_TEMPLATES['main']:
             settings.MAKO_TEMPLATES['main'].insert(0, theme.themes_base_dir)
